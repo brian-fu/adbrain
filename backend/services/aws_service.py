@@ -25,3 +25,17 @@ def upload_video(file: UploadFile, s3_key: str) -> bool:
         print(f"Error uploading file: {e}")
         return False
 
+def get_video_url(s3_key: str) -> str | None:
+    try:
+        url = s3_client.generate_presigned_url(
+            'get_object',
+            Params={
+                'Bucket': settings.AWS_S3_BUCKET_NAME,
+                'Key': s3_key
+            },
+            ExpiresIn=3600  # 1 hr expiry
+        )
+        return url
+    except Exception as e:
+        print(f"Error generating URL: {e}")
+        return None
