@@ -1,0 +1,27 @@
+# Config
+fastapi==0.119.0
+requests>=2.25.1
+python-dotenv>=0.19.0
+python-multipart
+
+pydantic
+pydantic-settings==2.4.0
+pydantic[email]
+
+# Db
+sqlalchemy==2.0.*
+psycopg2-binary
+uvicorn
+
+# Auth
+python-jose[cryptography]
+httpx
+
+# AWS
+boto3
+
+# Ai
+google-genai
+
+# Video
+ffmpeg-python
