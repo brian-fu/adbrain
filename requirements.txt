@@ -25,3 +25,5 @@ google-genai
 
 # Video
 ffmpeg-python
+
+instagrapi
