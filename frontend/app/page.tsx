@@ -1,9 +1,9 @@
-import { Header } from "@/components/header"
-import { HeroSection } from "@/components/hero-section"
-import { MetricsSection } from "@/components/metrics-section"
-import { AdCarousel } from "@/components/ad-carousel"
-import { FeaturesSection } from "@/components/features-section"
-import { CTASection } from "@/components/cta-section"
+import { Header } from "@/components/header";
+import { HeroSection } from "@/components/hero-section";
+import { MetricsSection } from "@/components/metrics-section";
+// import { AdCarousel } from "@/components/ad-carousel"
+import { FeaturesSection } from "@/components/features-section";
+import { CTASection } from "@/components/cta-section";
 
 export default function Home() {
   return (
@@ -11,9 +11,9 @@ export default function Home() {
       <Header />
       <HeroSection />
       <MetricsSection />
-      <AdCarousel />
+      {/* <AdCarousel /> */}
       <FeaturesSection />
       <CTASection />
     </main>
-  )
+  );
 }

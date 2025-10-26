@@ -9,7 +9,6 @@ import { Suspense } from "react";
 export const metadata: Metadata = {
   title: "Adfluence - Create Viral Ads in Seconds",
   description: "Transform your products into scroll-stopping ads with AI",
-  generator: "v0.app",
 };
 
 export default function RootLayout({
