@@ -11,6 +11,16 @@ import {
   VolumeX,
   Loader2,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -29,6 +39,10 @@ export default function PreviewPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [videoData, setVideoData] = useState<any>(null);
+  const [showInstagramDialog, setShowInstagramDialog] = useState(false);
+  const [instagramCaption, setInstagramCaption] = useState("");
+  const [isUploadingToInstagram, setIsUploadingToInstagram] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -131,10 +145,57 @@ export default function PreviewPage() {
   };
 
   const handleInstagramUpload = () => {
-    // In a real app, this would integrate with Instagram's API
-    alert(
-      "Instagram upload feature would integrate with Instagram's API in production"
-    );
+    // Open the dialog for caption input
+    setShowInstagramDialog(true);
+  };
+
+  const handleInstagramUploadConfirm = async () => {
+    if (!videoId) return;
+
+    setIsUploadingToInstagram(true);
+
+    try {
+      const serverUrl =
+        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
+      const response = await fetch(
+        `${serverUrl}/v1/videos/${videoId}/instagram`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            caption: instagramCaption,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to upload to Instagram");
+      }
+
+      const result = await response.json();
+      console.log("Instagram upload response:", result);
+
+      setUploadSuccess(true);
+
+      // Close dialog after a brief success message
+      setTimeout(() => {
+        setShowInstagramDialog(false);
+        setUploadSuccess(false);
+        setInstagramCaption("");
+      }, 2000);
+    } catch (error) {
+      console.error("Instagram upload failed:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to upload to Instagram. Please try again."
+      );
+    } finally {
+      setIsUploadingToInstagram(false);
+    }
   };
 
   if (loading) {
@@ -400,6 +461,78 @@ export default function PreviewPage() {
           </div>
         </div>
       </div>
+
+      {/* Instagram Upload Dialog */}
+      <Dialog open={showInstagramDialog} onOpenChange={setShowInstagramDialog}>
+        <DialogContent className="sm:max-w-[525px]">
+          <DialogHeader>
+            <DialogTitle>Upload to Instagram</DialogTitle>
+            <DialogDescription>
+              Add a caption for your Instagram Reel (optional)
+            </DialogDescription>
+          </DialogHeader>
+
+          {uploadSuccess ? (
+            <div className="py-8 text-center space-y-2">
+              <div className="text-4xl mb-4">✅</div>
+              <p className="text-lg font-semibold">Upload Started!</p>
+              <p className="text-sm text-muted-foreground">
+                Your video is being uploaded to Instagram
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="caption">Caption</Label>
+                  <Textarea
+                    id="caption"
+                    placeholder="Write your caption here... Include hashtags, emojis, and engaging text!"
+                    value={instagramCaption}
+                    onChange={(e) => setInstagramCaption(e.target.value)}
+                    rows={6}
+                    className="resize-none"
+                    disabled={isUploadingToInstagram}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Tip: Use relevant hashtags to increase reach
+                  </p>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowInstagramDialog(false);
+                    setInstagramCaption("");
+                  }}
+                  disabled={isUploadingToInstagram}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleInstagramUploadConfirm}
+                  disabled={isUploadingToInstagram}
+                  className="bg-gradient-to-r from-gradient-start to-gradient-end"
+                >
+                  {isUploadingToInstagram ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="w-4 h-4 mr-2" />
+                      Upload to Instagram
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
