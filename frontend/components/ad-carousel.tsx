@@ -1,42 +1,35 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Play } from "lucide-react";
 
 const sampleAds = [
   {
     id: 1,
-    thumbnail: "/placeholder.jpg",
+    thumbnail: "/ads/nikead.png",
     title: "Nike Air Max",
     views: "2.4M",
   },
   {
     id: 2,
-    thumbnail: "/placeholder.jpg",
-    title: "Rolex Submariner",
+    thumbnail: "/ads/shopifyad.png",
+    title: "Shopify",
     views: "1.8M",
   },
   {
     id: 3,
-    thumbnail: "/placeholder.jpg",
+    thumbnail: "/ads/applead.png",
     title: "iPhone 15 Pro",
     views: "3.2M",
   },
   {
     id: 4,
-    thumbnail: "/placeholder.jpg",
+    thumbnail: "/ads/redbullad.png",
     title: "Red Bull Energy",
     views: "2.1M",
   },
   {
     id: 5,
-    thumbnail: "/placeholder.jpg",
-    title: "Chanel No. 5",
-    views: "1.5M",
-  },
-  {
-    id: 6,
-    thumbnail: "/placeholder.jpg",
+    thumbnail: "/ads/razerad.png",
     title: "Razer Kraken",
     views: "980K",
   },
@@ -144,13 +137,6 @@ export function AdCarousel() {
                       alt={ad.title}
                       className="w-full h-full object-cover"
                     />
-
-                    {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-r from-gradient-start to-gradient-end flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform duration-300">
-                        <Play className="w-8 h-8 text-background fill-background ml-1" />
-                      </div>
-                    </div>
 
                     {/* Views badge */}
                     <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-background/80 backdrop-blur-sm border border-border">
