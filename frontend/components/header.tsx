@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 export function Header() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [instagramLoggedIn, setInstagramLoggedIn] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -29,6 +30,14 @@ export function Header() {
       setLoading(false);
     });
 
+    // Check Instagram login status
+    const checkInstagramStatus = () => {
+      setInstagramLoggedIn(
+        localStorage.getItem("instagram_logged_in") === "true"
+      );
+    };
+    checkInstagramStatus();
+
     // Listen for auth changes
     const {
       data: { subscription },
@@ -36,7 +45,16 @@ export function Header() {
       setUser(session?.user ?? null);
     });
 
-    return () => subscription.unsubscribe();
+    // Listen for storage changes (Instagram login/logout)
+    window.addEventListener("storage", checkInstagramStatus);
+    // Also check on focus in case localStorage changed in same window
+    window.addEventListener("focus", checkInstagramStatus);
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener("storage", checkInstagramStatus);
+      window.removeEventListener("focus", checkInstagramStatus);
+    };
   }, [supabase]);
 
   const handleSignOut = async () => {
@@ -88,6 +106,95 @@ export function Header() {
                 <DropdownMenuItem asChild>
                   <Link href="/dashboard">Dashboard</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/preview">My Videos</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {instagramLoggedIn ? (
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/instagram/logout"
+                      className="flex items-center gap-2"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <rect
+                          x="2"
+                          y="2"
+                          width="20"
+                          height="20"
+                          rx="5"
+                          ry="5"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <line
+                          x1="17.5"
+                          y1="6.5"
+                          x2="17.51"
+                          y2="6.5"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      Instagram: Logout
+                    </Link>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/instagram/login"
+                      className="flex items-center gap-2"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <rect
+                          x="2"
+                          y="2"
+                          width="20"
+                          height="20"
+                          rx="5"
+                          ry="5"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <line
+                          x1="17.5"
+                          y1="6.5"
+                          x2="17.51"
+                          y2="6.5"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      Instagram: Login
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleSignOut}
