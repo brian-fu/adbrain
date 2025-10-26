@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Form
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Form, BackgroundTasks
 from sqlalchemy.orm import Session
 from backend.config import settings
-from backend.schemas import VideoRead, VideoReadWithUrl, VideoGenerationResponse
+from backend.schemas import VideoRead, VideoReadWithUrl, VideoGenerationResponse, IgUploadResponse, IgUploadRequest
 from backend.db.models import Video, VideoStatus, get_db
+from backend.services.instagram_service import upload_reel
 from backend.services.veo_service import generate_video as veo_generate_video
 from backend.services.video_generator import concatenate_videos
 from backend.services.aws_service import upload_video as s3_upload_video, get_video_url as s3_get_video_url
@@ -228,6 +229,34 @@ def upload_video_endpoint(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@router.post("/videos/{video_id}/instagram", response_model=IgUploadResponse)
+def upload_video_to_instagram(
+    video_id: int,
+    body: IgUploadRequest,
+    background: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
+    # Look up the video by DB id
+    video = video_service.get_video_by_id(db, video_id)
+    if not video:
+        raise HTTPException(status_code=404, detail="Video not found")
+
+    # Get a presigned URL (valid for a short time)
+    url = video_service.presign_video(video, expires_in=3600)
+    if not url:
+        raise HTTPException(status_code=500, detail="Failed to generate video URL")
+
+    # Kick off upload in background (instagrapi is blocking)
+    try:
+        background.add_task(upload_reel, url, body.caption)
+    except:
+        raise HTTPException(status_code=502, detail=f"Instagram error")
+
+    return IgUploadResponse(status="queued", detail="Upload started")
+    
+
+
 # ---------- Get by id (with URL) ----------
 
 @router.get("/videos/{video_id}") # returns a single VideoRead object by video id with a presigned url that expires in an hour
@@ -267,7 +296,15 @@ def get_video(video_id: str, db: Session = Depends(get_db)):
 # ---------- List for user (with URLs) ----------
 
 @router.get("/users/{user_id}/videos-with-urls")
-def list_user_videos(user_id: str, db: Session = Depends(get_db)):
+def list_user_videos(
+    user_id: str, 
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user)  # Require authentication
+):
+    # Ensure user can only access their own videos
+    if current_user_id != user_id:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
     try:
         records = video_service.list_videos_with_urls_for_user(db, user_id, expires_in=3600)
         # Convert dicts to schema 

@@ -32,3 +32,10 @@ class VideoGenerationResponse(BaseModel):
     video_id: str
     status: str
     video_url: Optional[str] = None
+
+class IgUploadRequest(BaseModel):
+    caption: str = ""
+
+class IgUploadResponse(BaseModel):
+    status: str
+    detail: str | None = None
