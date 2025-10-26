@@ -10,14 +10,19 @@ s3_client = boto3.client(
     region_name=settings.AWS_REGION,
 )
 
-def upload_video(file: UploadFile, s3_key: str) -> bool:
+def upload_video(file: UploadFile, s3_key: str, content_type: str = None) -> bool:
     try:
+        # Use provided content_type or fall back to file's content_type or default to video/mp4
+        mime_type = content_type or getattr(file, 'content_type', None) or "video/mp4"
+        
         s3_client.upload_fileobj(
             file.file,
             settings.AWS_S3_BUCKET_NAME,
             s3_key,
             ExtraArgs={
-                "ContentType": file.content_type
+                "ContentType": mime_type,
+                "CacheControl": "max-age=86400",  # Cache for 24 hours
+                "ContentDisposition": "inline"  # Display inline (for video playback)
             }
         )
         return True
@@ -25,7 +30,7 @@ def upload_video(file: UploadFile, s3_key: str) -> bool:
         print(f"Error uploading file: {e}")
         return False
 
-def get_video_url(s3_key: str) -> str | None:
+def get_video_url(s3_key: str, expires_in: int) -> str | None:
     try:
         url = s3_client.generate_presigned_url(
             'get_object',
@@ -33,7 +38,7 @@ def get_video_url(s3_key: str) -> str | None:
                 'Bucket': settings.AWS_S3_BUCKET_NAME,
                 'Key': s3_key
             },
-            ExpiresIn=3600  # 1 hr expiry
+            ExpiresIn=expires_in 
         )
         return url
     except Exception as e:

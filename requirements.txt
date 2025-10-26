@@ -26,4 +26,4 @@ google-genai
 # Video
 ffmpeg-python
 
-instagrapi
+instagrapi==2.2.1
