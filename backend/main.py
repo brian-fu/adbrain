@@ -4,7 +4,7 @@ from backend.routes.video import router as video_router
 
 from backend.config import settings
 
-COMPANY_NAME = "da growth engineers"
+COMPANY_NAME = "AIBrain"
 
 # ------------------------------------------------------
 # App Initialization
