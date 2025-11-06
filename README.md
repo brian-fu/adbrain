@@ -18,20 +18,20 @@
 
 ---
 
-## 🧩 About the Project
+## About the Project
 
 **AdBrain** revolutionizes digital marketing by automatically generating professional ad videos from simple text or product descriptions.
 
-Creators, small businesses, and event organizers can instantly turn ideas into compelling marketing content — powered by AI video generation via **Google Veo**, scalable cloud storage with **AWS S3**, and seamless backend orchestration through **FastAPI** and **Supabase (PostgreSQL)**.
+Creators, small businesses, and event organizers can instantly turn ideas into compelling marketing content, powered by AI video generation via **Google Veo**, scalable cloud storage with **AWS S3**, and seamless backend orchestration through **FastAPI** and **Supabase (PostgreSQL)**.
 
-### ✨ Features
+### Features
 
-* 🪄 **AI Video Generation** using Google Veo API
-* 📦 **AWS S3 Integration** for secure video storage
-* 🔐 **Supabase Auth & Database** for user and video management
-* ⚡ **FastAPI Backend** with async video processing
-* 🌐 **Next.js Frontend** with a modern dashboard and upload preview
-* 📱 Auto-generated thumbnails and progress tracking
+*  **AI Video Generation** using Google Veo API
+*  **AWS S3 Integration** for secure video storage
+*  **Supabase Auth & Database** for user and video management
+*  **FastAPI Backend** with async video processing
+*  **Next.js Frontend** with a modern dashboard and upload preview
+*  Auto-generated thumbnails and progress tracking
 
 ![Landing Page Preview](frontend/public/readme/landing_page.png)
 
@@ -39,9 +39,9 @@ Creators, small businesses, and event organizers can instantly turn ideas into c
 
 ---
 
-## 🧰 Built With
+## Built With
 
-This project combines modern full-stack tools with cutting-edge AI generation:
+This project combines modern full-stack tools with the latest AI models:
 
 ![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge\&logo=nextdotjs\&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge\&logo=fastapi)
@@ -56,17 +56,17 @@ This project combines modern full-stack tools with cutting-edge AI generation:
 
 ---
 
-## ⚙️ Getting Started
+## Getting Started
 
 Follow these steps to run AdBrain locally:
 
-### 📋 Prerequisites
+### Prerequisites
 
 * Node.js (v18 or higher)
 * Python (v3.10 or higher)
 * AWS S3 credentials and Supabase project setup
 
-### 🧾 Installation
+### Installation
 
 1. **Clone the repository**
 
@@ -145,7 +145,7 @@ Follow these steps to run AdBrain locally:
 
 ---
 
-## 🚀 Usage
+## Usage
 
 1. **Sign up / Log in** via Supabase authentication
 2. **Enter a short product or event description**
@@ -161,4 +161,5 @@ Built by **Brian Fu** and **Brian An** at **CalHacks 12.0**
 Special thanks to Google Veo, AWS, and Supabase for powering AdBrain’s infrastructure.
 
 ---
+
 
