@@ -1,7 +1,3 @@
-Here’s a rewritten version of your README — fully tailored for **AdBrain**, reflecting your actual stack (Next.js, FastAPI, Supabase, AWS S3, Google Veo) and refined for a hackathon submission. It’s professional yet readable, and ready for Devpost or GitHub.
-
----
-
 <a id="readme-top"></a>
 
 <!-- PROJECT LOGO -->
@@ -165,3 +161,4 @@ Built by **Brian Fu** and **Brian An** at **CalHacks 12.0**
 Special thanks to Google Veo, AWS, and Supabase for powering AdBrain’s infrastructure.
 
 ---
+
